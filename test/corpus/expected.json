@@ -1,0 +1,472 @@
+[
+  {
+    "config": "default",
+    "html": "\u003cstrong\u003eBold Text\u003c/strong\u003e",
+    "expected": "**Bold Text**"
+  },
+  {
+    "config": "default",
+    "html": "\u003cp\u003ea\u003c/p\u003e\u003cp\u003eb\u003c/p\u003e",
+    "expected": "a\n\nb"
+  },
+  {
+    "config": "default",
+    "html": "some \u003cb\u003ebold\u003c/b\u003e and \u003cstrong\u003estrong\u003c/strong\u003e text",
+    "expected": "some **bold** and **strong** text"
+  },
+  {
+    "config": "default",
+    "html": "\u003cem\u003ea\u003c/em\u003e\u003ci\u003eb\u003c/i\u003e",
+    "expected": "*ab*"
+  },
+  {
+    "config": "default",
+    "html": "\u003cb\u003ebold \u003ci\u003eand italic\u003c/i\u003e\u003c/b\u003e",
+    "expected": "**bold *and italic***"
+  },
+  {
+    "config": "default",
+    "html": "\u003cb\u003ea\u003c/b\u003e\u003cb\u003eb\u003c/b\u003e",
+    "expected": "**ab**"
+  },
+  {
+    "config": "default",
+    "html": "\u003cb\u003e\u003cb\u003edouble\u003c/b\u003e\u003c/b\u003e",
+    "expected": "**double**"
+  },
+  {
+    "config": "default",
+    "html": "a\u003cb\u003e spaced \u003c/b\u003ec",
+    "expected": "a **spaced** c"
+  },
+  {
+    "config": "default",
+    "html": "\u003cb\u003emulti\nline\u003c/b\u003e",
+    "expected": "**multi line**"
+  },
+  {
+    "config": "default",
+    "html": "\u003ch1\u003eHeading 1\u003c/h1\u003e\u003ch2\u003eH2\u003c/h2\u003e\u003ch3\u003eH3\u003c/h3\u003e\u003ch4\u003eH4\u003c/h4\u003e\u003ch5\u003eH5\u003c/h5\u003e\u003ch6\u003eH6\u003c/h6\u003e",
+    "expected": "# Heading 1\n\n## H2\n\n### H3\n\n#### H4\n\n##### H5\n\n###### H6"
+  },
+  {
+    "config": "default",
+    "html": "\u003ch1\u003eHeading with trailing #\u003c/h1\u003e",
+    "expected": "# Heading with trailing \\#"
+  },
+  {
+    "config": "default",
+    "html": "\u003ch2\u003eHeading with \u003ca href=\"/x\"\u003elink\u003c/a\u003e\u003c/h2\u003e",
+    "expected": "## Heading with [link](/x)"
+  },
+  {
+    "config": "default",
+    "html": "\u003ch1\u003e  lots    of   spaces  \u003c/h1\u003e",
+    "expected": "# lots of spaces"
+  },
+  {
+    "config": "default",
+    "html": "\u003ch1\u003e\u003c/h1\u003e\u003ch2\u003e   \u003c/h2\u003e",
+    "expected": ""
+  },
+  {
+    "config": "default",
+    "html": "\u003cblockquote\u003equote\u003c/blockquote\u003e",
+    "expected": "\u003e quote"
+  },
+  {
+    "config": "default",
+    "html": "\u003cblockquote\u003eLine A\u003cbr /\u003eLine B\u003c/blockquote\u003e",
+    "expected": "\u003e Line A  \n\u003e Line B"
+  },
+  {
+    "config": "default",
+    "html": "\u003cblockquote\u003e\u003cblockquote\u003enested\u003c/blockquote\u003e\u003c/blockquote\u003e",
+    "expected": "\u003e \u003e nested"
+  },
+  {
+    "config": "default",
+    "html": "\u003cblockquote\u003e\u003c/blockquote\u003e",
+    "expected": ""
+  },
+  {
+    "config": "default",
+    "html": "\u003cul\u003e\u003cli\u003eone\u003c/li\u003e\u003cli\u003etwo\u003c/li\u003e\u003c/ul\u003e",
+    "expected": "- one\n- two"
+  },
+  {
+    "config": "default",
+    "html": "\u003col\u003e\u003cli\u003eone\u003c/li\u003e\u003cli\u003etwo\u003c/li\u003e\u003c/ol\u003e",
+    "expected": "1. one\n2. two"
+  },
+  {
+    "config": "default",
+    "html": "\u003col start=\"8\"\u003e\u003cli\u003eeight\u003c/li\u003e\u003cli\u003enine\u003c/li\u003e\u003cli\u003eten\u003c/li\u003e\u003c/ol\u003e",
+    "expected": "08. eight\n09. nine\n10. ten"
+  },
+  {
+    "config": "default",
+    "html": "\u003cul\u003e\u003cli\u003ea\u003cul\u003e\u003cli\u003enested\u003c/li\u003e\u003c/ul\u003e\u003c/li\u003e\u003c/ul\u003e",
+    "expected": "- a\n  \n  - nested"
+  },
+  {
+    "config": "default",
+    "html": "\u003cul\u003e\u003cli\u003etext\u003c/li\u003e\u003c/ul\u003e\u003cul\u003e\u003cli\u003eother list\u003c/li\u003e\u003c/ul\u003e",
+    "expected": "- text\n\n\u003c!--THE END--\u003e\n\n- other list"
+  },
+  {
+    "config": "default",
+    "html": "\u003cul\u003estray text\u003cli\u003eitem\u003c/li\u003e\u003c/ul\u003e",
+    "expected": "- stray text\n- item"
+  },
+  {
+    "config": "default",
+    "html": "\u003cul\u003e\u003cli\u003e\u003c/li\u003e\u003cli\u003e  \u003c/li\u003e\u003cli\u003eok\u003c/li\u003e\u003c/ul\u003e",
+    "expected": "- ok"
+  },
+  {
+    "config": "default",
+    "html": "\u003cpre\u003e\u003ccode\u003eline 1\nline 2\u003c/code\u003e\u003c/pre\u003e",
+    "expected": "```\nline 1\nline 2\n```"
+  },
+  {
+    "config": "default",
+    "html": "\u003cpre\u003e\u003ccode class=\"language-go\"\u003efmt.Println()\u003c/code\u003e\u003c/pre\u003e",
+    "expected": "```go\nfmt.Println()\n```"
+  },
+  {
+    "config": "default",
+    "html": "\u003cpre\u003e\u003ccode\u003econtains ``` fence\u003c/code\u003e\u003c/pre\u003e",
+    "expected": "````\ncontains ``` fence\n````"
+  },
+  {
+    "config": "default",
+    "html": "\u003ccode\u003einline\u003c/code\u003e",
+    "expected": "`inline`"
+  },
+  {
+    "config": "default",
+    "html": "\u003ccode\u003ewith ` backtick\u003c/code\u003e",
+    "expected": "``with ` backtick``"
+  },
+  {
+    "config": "default",
+    "html": "\u003ccode\u003e   \u003c/code\u003e",
+    "expected": "`   `"
+  },
+  {
+    "config": "default",
+    "html": "\u003ccode\u003e\u003c/code\u003e",
+    "expected": ""
+  },
+  {
+    "config": "default",
+    "html": "\u003ca href=\"/page\"\u003elink\u003c/a\u003e",
+    "expected": "[link](/page)"
+  },
+  {
+    "config": "default",
+    "html": "\u003ca href=\"\"\u003eno href\u003c/a\u003e",
+    "expected": "[no href]()"
+  },
+  {
+    "config": "default",
+    "html": "\u003ca href=\"/p\"\u003e\u003c/a\u003e",
+    "expected": "[](/p)"
+  },
+  {
+    "config": "default",
+    "html": "\u003ca href=\"/p\" title=\"the title\"\u003et\u003c/a\u003e",
+    "expected": "[t](/p \"the title\")"
+  },
+  {
+    "config": "default",
+    "html": "\u003ca href=\"/p\" title=\"with \u0026quot;quotes\u0026quot;\"\u003et\u003c/a\u003e",
+    "expected": "[t](/p 'with \"quotes\"')"
+  },
+  {
+    "config": "default",
+    "html": "\u003ca href=\"/a?b=c\u0026d=e f\"\u003equery\u003c/a\u003e",
+    "expected": "[query](/a?b=c\u0026d=e%20f)"
+  },
+  {
+    "config": "default",
+    "html": "\u003ca href=\"mailto:a@b.com?subject=Hi There\"\u003email\u003c/a\u003e",
+    "expected": "[mail](mailto:a@b.com?subject=Hi%20There)"
+  },
+  {
+    "config": "default",
+    "html": "\u003ca href=\"#\"\u003ehash\u003c/a\u003e",
+    "expected": "[hash](#)"
+  },
+  {
+    "config": "default",
+    "html": "\u003ca href=\"https://example.com/a(b)c\"\u003eparens\u003c/a\u003e",
+    "expected": "[parens](https://example.com/a%28b%29c)"
+  },
+  {
+    "config": "default",
+    "html": "\u003ca href=\"/p\"\u003emulti\nline\n\ncontent\u003c/a\u003e",
+    "expected": "[multi line content](/p)"
+  },
+  {
+    "config": "default",
+    "html": "\u003cimg src=\"/img.png\" /\u003e",
+    "expected": "![](/img.png)"
+  },
+  {
+    "config": "default",
+    "html": "\u003cimg src=\"/img.png\" alt=\"the [alt]\" title=\"t\" /\u003e",
+    "expected": "![the \\[alt\\]](/img.png \"t\")"
+  },
+  {
+    "config": "default",
+    "html": "\u003cimg alt=\"no src\" /\u003e",
+    "expected": ""
+  },
+  {
+    "config": "default",
+    "html": "\u003chr /\u003e",
+    "expected": "* * *"
+  },
+  {
+    "config": "default",
+    "html": "a\u003cbr /\u003eb",
+    "expected": "a  \nb"
+  },
+  {
+    "config": "default",
+    "html": "1. not a list",
+    "expected": "1\\. not a list"
+  },
+  {
+    "config": "default",
+    "html": "- not a list",
+    "expected": "\\- not a list"
+  },
+  {
+    "config": "default",
+    "html": "# not a heading",
+    "expected": "\\# not a heading"
+  },
+  {
+    "config": "default",
+    "html": "\u0026gt; not a quote",
+    "expected": "\u0026gt; not a quote"
+  },
+  {
+    "config": "default",
+    "html": "text with * and _ and ` and [brackets]",
+    "expected": "text with * and _ and \\` and \\[brackets]"
+  },
+  {
+    "config": "default",
+    "html": "\u003cp\u003ea \u0026amp; b \u0026lt; c\u003c/p\u003e",
+    "expected": "a \u0026 b \u0026lt; c"
+  },
+  {
+    "config": "default",
+    "html": "\u003cdiv\u003ebefore    \u003cspan\u003emid\u003c/span\u003e    after\u003c/div\u003e",
+    "expected": "before mid after"
+  },
+  {
+    "config": "default",
+    "html": "\u003cspan\u003e\u003cdiv\u003efake span\u003c/div\u003e\u003c/span\u003e",
+    "expected": "fake span"
+  },
+  {
+    "config": "default",
+    "html": "\u003ch1\u003e\u003cblockquote\u003equote in heading\u003c/blockquote\u003e\u003c/h1\u003e",
+    "expected": "# \"quote in heading\""
+  },
+  {
+    "config": "default",
+    "html": "\u003ch1\u003e\u003chr /\u003e\u003c/h1\u003e",
+    "expected": ""
+  },
+  {
+    "config": "default",
+    "html": "\u003ca href=\"/x\"\u003e\u003ch2\u003eheading in link\u003c/h2\u003e\u003c/a\u003e",
+    "expected": "## [heading in link](/x)"
+  },
+  {
+    "config": "default",
+    "html": "\u003cscript\u003eignored\u003c/script\u003e\u003cp\u003ekept\u003c/p\u003e",
+    "expected": "kept"
+  },
+  {
+    "config": "default",
+    "html": "\u003cp\u003e名稱 and 😊 and é\u003c/p\u003e",
+    "expected": "名稱 and 😊 and é"
+  },
+  {
+    "config": "setext",
+    "html": "\u003ch1\u003eHeading 1\u003c/h1\u003e\u003ch2\u003eHeading 2\u003c/h2\u003e\u003ch3\u003eHeading 3\u003c/h3\u003e",
+    "expected": "Heading 1\n=========\n\nHeading 2\n---------\n\n### Heading 3"
+  },
+  {
+    "config": "setext",
+    "html": "\u003ch1\u003eÜnïcödé Häädïng\u003c/h1\u003e",
+    "expected": "Ünïcödé Häädïng\n==============="
+  },
+  {
+    "config": "underscore",
+    "html": "\u003cb\u003ebold\u003c/b\u003e and \u003ci\u003eitalic\u003c/i\u003e",
+    "expected": "__bold__ and _italic_"
+  },
+  {
+    "config": "plus-bullet",
+    "html": "\u003cul\u003e\u003cli\u003ea\u003c/li\u003e\u003cli\u003eb\u003c/li\u003e\u003c/ul\u003e",
+    "expected": "+ a\n+ b"
+  },
+  {
+    "config": "tilde-fence",
+    "html": "\u003cpre\u003e\u003ccode\u003ecode\u003c/code\u003e\u003c/pre\u003e",
+    "expected": "~~~\ncode\n~~~"
+  },
+  {
+    "config": "no-escape",
+    "html": "text with * and _ and # and [x]",
+    "expected": "text with * and _ and # and [x]"
+  },
+  {
+    "config": "domain",
+    "html": "\u003ca href=\"/rel\"\u003el\u003c/a\u003e \u003cimg src=\"/img.png\" /\u003e",
+    "expected": "[l](https://example.com/rel) ![](https://example.com/img.png)"
+  },
+  {
+    "config": "domain",
+    "html": "\u003ca href=\"https://other.com/abs\"\u003el\u003c/a\u003e",
+    "expected": "[l](https://other.com/abs)"
+  },
+  {
+    "config": "link-skip",
+    "html": "\u003ca href=\"\"\u003eno href\u003c/a\u003e \u003ca href=\"/p\"\u003e\u003c/a\u003e",
+    "expected": "no href"
+  },
+  {
+    "config": "no-list-comment",
+    "html": "\u003cul\u003e\u003cli\u003ea\u003c/li\u003e\u003c/ul\u003e\u003cul\u003e\u003cli\u003eb\u003c/li\u003e\u003c/ul\u003e",
+    "expected": "- a\n\n- b"
+  },
+  {
+    "config": "strike",
+    "html": "\u003cdel\u003edeleted\u003c/del\u003e \u003cs\u003estruck\u003c/s\u003e \u003cstrike\u003eold\u003c/strike\u003e",
+    "expected": "~~deleted~~ ~~struck~~ ~~old~~"
+  },
+  {
+    "config": "strike",
+    "html": "\u003cdel\u003ea\u003c/del\u003e\u003cdel\u003eb\u003c/del\u003e",
+    "expected": "~~ab~~"
+  },
+  {
+    "config": "strike",
+    "html": "\u003cdel\u003emulti\nline\u003c/del\u003e",
+    "expected": "~~multi line~~"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003cth\u003eA\u003c/th\u003e\u003cth\u003eB\u003c/th\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e1\u003c/td\u003e\u003ctd\u003e2\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "| A | B |\n|---|---|\n| 1 | 2 |"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eno header\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "|           |\n|-----------|\n| no header |"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eH\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eb\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e",
+    "expected": "| H |\n|---|\n| b |"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003cth align=\"left\"\u003eL\u003c/th\u003e\u003cth align=\"center\"\u003eC\u003c/th\u003e\u003cth align=\"right\"\u003eR\u003c/th\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e1\u003c/td\u003e\u003ctd\u003e2\u003c/td\u003e\u003ctd\u003e3\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "| L | C | R |\n|:--|:-:|--:|\n| 1 | 2 | 3 |"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003ccaption\u003eThe Caption\u003c/caption\u003e\u003ctr\u003e\u003cth\u003eA\u003c/th\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e1\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "| A |\n|---|\n| 1 |\n\nThe Caption"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003cth\u003eName\u003c/th\u003e\u003cth\u003eValue\u003c/th\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e名稱\u003c/td\u003e\u003ctd\u003e1\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eabc\u003c/td\u003e\u003ctd\u003e2\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "| Name | Value |\n|------|-------|\n| 名稱 | 1     |\n| abc  | 2     |"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003cth\u003eIcon\u003c/th\u003e\u003cth\u003eLabel\u003c/th\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e😊\u003c/td\u003e\u003ctd\u003eemoji\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e👨‍👩‍👧‍👦\u003c/td\u003e\u003ctd\u003ezwj\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eé\u003c/td\u003e\u003ctd\u003ecombining\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eab\u003c/td\u003e\u003ctd\u003eascii\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "| Icon | Label     |\n|------|-----------|\n| 😊   | emoji     |\n| 👨‍👩‍👧‍👦   | zwj       |\n| é    | combining |\n| ab   | ascii     |"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003ea|b\u003c/td\u003e\u003ctd\u003ec\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "|      |   |\n|------|---|\n| a\\|b | c |"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003ewith \u003chr /\u003e divider\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "with\n\n* * *\n\ndivider"
+  },
+  {
+    "config": "table",
+    "html": "\u003ca href=\"/x\"\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003ein link\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003c/a\u003e",
+    "expected": "[in link](/x)"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable role=\"presentation\"\u003e\u003ctr\u003e\u003ctd\u003elayout\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "layout"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003ea\u003cbr /\u003eb\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "a  \nb"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003ctd colspan=\"3\"\u003ewide\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e1\u003c/td\u003e\u003ctd\u003e2\u003c/td\u003e\u003ctd\u003e3\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "|      |   |   |\n|------|---|---|\n| wide |   |   |\n| 1    | 2 | 3 |"
+  },
+  {
+    "config": "table",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003ctd rowspan=\"2\"\u003etall\u003c/td\u003e\u003ctd\u003ex\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003ey\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "|      |   |\n|------|---|\n| tall | x |\n|      | y |"
+  },
+  {
+    "config": "table-minimal",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003cth\u003eName\u003c/th\u003e\u003cth\u003eValue\u003c/th\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e名稱\u003c/td\u003e\u003ctd\u003e1\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eabc\u003c/td\u003e\u003ctd\u003e2\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "| Name | Value |\n|---|---|\n| 名稱 | 1 |\n| abc | 2 |"
+  },
+  {
+    "config": "table-none",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003cth\u003eName\u003c/th\u003e\u003cth\u003eValue\u003c/th\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e名稱\u003c/td\u003e\u003ctd\u003e1\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eabc\u003c/td\u003e\u003ctd\u003e2\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "|Name|Value|\n|---|---|\n|名稱|1|\n|abc|2|"
+  },
+  {
+    "config": "table-mirror",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003ctd colspan=\"3\"\u003ewide\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e1\u003c/td\u003e\u003ctd\u003e2\u003c/td\u003e\u003ctd\u003e3\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "|      |      |      |\n|------|------|------|\n| wide | wide | wide |\n| 1    | 2    | 3    |"
+  },
+  {
+    "config": "table-preserve",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003cth\u003eH\u003c/th\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003ea\u003cbr /\u003eb\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "| H          |\n|------------|\n| a  \u003cbr /\u003eb |"
+  },
+  {
+    "config": "table-skip-empty",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003cth\u003eH\u003c/th\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003ex\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "| H |\n|---|\n| x |"
+  },
+  {
+    "config": "table-promote",
+    "html": "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003efirst\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003esecond\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "| first  |\n|--------|\n| second |"
+  },
+  {
+    "config": "table-presentation",
+    "html": "\u003ctable role=\"presentation\"\u003e\u003ctr\u003e\u003ctd\u003elayout\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+    "expected": "|        |\n|--------|\n| layout |"
+  }
+]
