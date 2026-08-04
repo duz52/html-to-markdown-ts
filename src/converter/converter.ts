@@ -50,10 +50,26 @@ interface Prioritized<V> {
   priority: number;
 }
 
+// The sorted view of a handler list is recomputed only when the list changes.
+// Rendering asks for it once per node, so re-sorting every time showed up as
+// a measurable cost (plus two array allocations) on large documents.
+const sortedCache = new WeakMap<object, unknown[]>();
+
 function sorted<V>(handlers: Array<Prioritized<V>>): V[] {
+  const cached = sortedCache.get(handlers);
+  if (cached !== undefined) {
+    return cached as V[];
+  }
   // Array.prototype.sort is stable, so handlers with the same priority keep
   // their registration order.
-  return [...handlers].sort((a, b) => a.priority - b.priority).map((h) => h.value);
+  const result = [...handlers].sort((a, b) => a.priority - b.priority).map((h) => h.value);
+  sortedCache.set(handlers, result);
+  return result;
+}
+
+/** Drops the memoized order after a handler list is appended to. */
+function invalidateSorted(handlers: object): void {
+  sortedCache.delete(handlers);
 }
 
 export class Converter {
@@ -108,10 +124,12 @@ export class Converter {
 
       preRenderer(fn: PreRenderFn, priority: number): void {
         conv.preRenderHandlers.push({ value: fn, priority });
+        invalidateSorted(conv.preRenderHandlers);
       },
 
       renderer(fn: RenderFn, priority: number): void {
         conv.renderHandlers.push({ value: fn, priority });
+        invalidateSorted(conv.renderHandlers);
       },
 
       rendererFor(tagName: string, tagType: TagType, fn: RenderFn, priority: number): void {
@@ -126,10 +144,12 @@ export class Converter {
 
       postRenderer(fn: PostRenderFn, priority: number): void {
         conv.postRenderHandlers.push({ value: fn, priority });
+        invalidateSorted(conv.postRenderHandlers);
       },
 
       textTransformer(fn: TextTransformFn, priority: number): void {
         conv.textTransformHandlers.push({ value: fn, priority });
+        invalidateSorted(conv.textTransformHandlers);
       },
 
       escapedChar(...chars: string[]): void {
@@ -140,6 +160,7 @@ export class Converter {
 
       unEscaper(fn: UnEscapeFn, priority: number): void {
         conv.unEscapeHandlers.push({ value: fn, priority });
+        invalidateSorted(conv.unEscapeHandlers);
       },
 
       tagType(tagName: string, tagType: TagType, priority: number): void {
@@ -148,6 +169,7 @@ export class Converter {
           conv.tagTypes.set(tagName, [{ value: tagType, priority }]);
         } else {
           existing.push({ value: tagType, priority });
+          invalidateSorted(existing);
         }
       },
     };

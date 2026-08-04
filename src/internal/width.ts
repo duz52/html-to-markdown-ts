@@ -641,6 +641,21 @@ export function stringWidth(s: string): number {
     return 0;
   }
 
+  // Fast path: printable ASCII is exactly one column per character, so the
+  // grapheme segmentation below cannot change the answer. This is by far the
+  // most common case (table cells, urls, plain prose).
+  let ascii = true;
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i);
+    if (c < 0x20 || c > 0x7e) {
+      ascii = false;
+      break;
+    }
+  }
+  if (ascii) {
+    return s.length;
+  }
+
   let width = 0;
   if (segmenter !== undefined) {
     for (const { segment } of segmenter.segment(s)) {

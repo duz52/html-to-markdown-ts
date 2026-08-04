@@ -22,10 +22,50 @@ function percentEncode(s: string): string {
   return out;
 }
 
+/**
+ * True if the url starts with a scheme ("https:", "mailto:", "data:").
+ * Without one, `new URL(url)` can only succeed when a base is supplied, so
+ * this check lets us skip a guaranteed-to-throw constructor call — exceptions
+ * are expensive enough to dominate documents with many relative links.
+ */
+function hasScheme(url: string): boolean {
+  for (let i = 0; i < url.length; i++) {
+    const c = url.charCodeAt(i);
+    if (c === 0x3a /* ":" */) {
+      return i > 0;
+    }
+    const isAlpha = (c >= 0x61 && c <= 0x7a) || (c >= 0x41 && c <= 0x5a);
+    if (isAlpha) {
+      continue;
+    }
+    const isSchemeTail =
+      i > 0 && ((c >= 0x30 && c <= 0x39) || c === 0x2b || c === 0x2d || c === 0x2e);
+    if (!isSchemeTail) {
+      return false;
+    }
+  }
+  return false;
+}
+
+// The base domain is fixed for a whole conversion, so parsing it once and
+// reusing the result avoids re-running the URL parser for every single link.
+let cachedDomain: string | undefined;
+let cachedBase: URL | null = null;
+
 function parseBaseDomain(rawDomain: string): URL | null {
   if (rawDomain === "") {
     return null;
   }
+  if (rawDomain === cachedDomain) {
+    return cachedBase;
+  }
+  const parsed = parseBaseDomainUncached(rawDomain);
+  cachedDomain = rawDomain;
+  cachedBase = parsed;
+  return parsed;
+}
+
+function parseBaseDomainUncached(rawDomain: string): URL | null {
 
   try {
     const u = new URL(rawDomain);
@@ -119,6 +159,12 @@ export function defaultAssembleAbsoluteURL(
   url = url.replaceAll("\n", "%0A").replaceAll("\t", "%09");
 
   const base = parseBaseDomain(domain);
+
+  if (base === null && !hasScheme(url)) {
+    // A relative url with no domain configured: `new URL` would throw, so
+    // take the same path the catch below does without paying for the throw.
+    return percentEncode(encodeRelative(url));
+  }
 
   let parsed: URL;
   try {
