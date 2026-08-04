@@ -52,6 +52,18 @@ function convert(p5: P5Node): Node | null {
     });
   }
 
+  // Go keeps template contents as ordinary children, while parse5 parks them
+  // in a separate `content` fragment that is not in childNodes.
+  const tmplContent = (p5 as { content?: P5ParentNode }).content;
+  if (tmplContent !== undefined) {
+    for (const child of tmplContent.childNodes) {
+      const converted = convert(child);
+      if (converted !== null) {
+        node.appendChild(converted);
+      }
+    }
+  }
+
   if (hasChildNodes(p5)) {
     for (const child of p5.childNodes) {
       const converted = convert(child);
