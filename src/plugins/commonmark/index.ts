@@ -211,7 +211,12 @@ class CommonmarkPlugin implements Plugin {
     leafBlockAlternatives(doc);
 
     // - - - List - - - //
-    moveListItems(doc);
+    // Safe to key on the set collected above: the alternatives above only
+    // rename to strong, span, br and code, so neither list container can
+    // appear after it was taken.
+    if (hasAny("ul", "ol")) {
+      moveListItems(doc);
+    }
   }
 
   private handleRender(ctx: Context, w: Writer, n: Node): RenderStatus {

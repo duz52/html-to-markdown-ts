@@ -437,8 +437,15 @@ export function moveListItems(n: Node): void {
     }
   }
 
-  for (const child of allChildNodes(n)) {
+  // Only the loop above restructures the children of n, and it has already
+  // run, so the recursion can walk the list live. Recursing into a child only
+  // ever rearranges that child's own children, never its siblings — but the
+  // next pointer is taken first anyway, which costs nothing and would survive
+  // the node being moved.
+  for (let child = n.firstChild; child !== null; ) {
+    const next = child.nextSibling;
     moveListItems(child);
+    child = next;
   }
 }
 
