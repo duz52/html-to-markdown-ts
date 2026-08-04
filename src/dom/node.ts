@@ -17,6 +17,20 @@ export enum NodeType {
   Doctype = 5,
 }
 
+/**
+ * The attribute list handed to every node parsed without attributes.
+ *
+ * Most elements in a document have no attributes at all, and giving each of
+ * them its own array is enough allocation to push the nodes apart on the heap.
+ * They share this one instead.
+ *
+ * It is frozen because it is shared: code that needs to add an attribute has to
+ * put a fresh array on the node first (see the tree adapter), and anything that
+ * writes here by mistake fails immediately rather than silently altering every
+ * other attribute-less node.
+ */
+export const EMPTY_ATTRS: Attribute[] = Object.freeze([] as Attribute[]) as Attribute[];
+
 export interface Attribute {
   namespace?: string;
   key: string;
