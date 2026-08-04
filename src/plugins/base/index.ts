@@ -70,14 +70,15 @@ function preRenderRemove(ctx: Context, doc: Node): void {
       return;
     }
 
-    // Snapshot the children: the Go version defers the recursion so that it
-    // runs after the loop, because nodes are being removed as we go.
-    const children: Node[] = [];
-    for (let child = node.firstChild; child !== null; child = child.nextSibling) {
-      children.push(child);
-    }
-    for (let i = children.length - 1; i >= 0; i--) {
-      finder(children[i]!);
+    // Go snapshots the children here because nodes are removed as we go. On a
+    // linked list the same thing falls out of walking backwards and reading
+    // the previous sibling before the recursion, which may detach the child
+    // and clear its pointers — and it saves an array per node, on a tree that
+    // gets walked a dozen more times after this.
+    for (let child = node.lastChild; child !== null; ) {
+      const prev = child.prevSibling;
+      finder(child);
+      child = prev;
     }
   };
   finder(doc);
