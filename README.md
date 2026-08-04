@@ -12,6 +12,9 @@ The port is verified against the Go implementation: the upstream golden files
 and a corpus of ~95 cases across the option surface are asserted to produce
 byte-identical output. See [Verifying the port](#verifying-the-port).
 
+**[Try it in the playground →](https://duz52.github.io/html-to-markdown-ts/)** — paste HTML,
+tweak every option, and share a link to what you're seeing.
+
 ## Install
 
 ```bash
@@ -184,6 +187,23 @@ npm test          # run everything
 npm run typecheck
 npm run build
 ```
+
+## Playground
+
+`playground/` is a static page — no build step. It pulls the published package
+from jsDelivr (`html-to-markdown-ts@VERSION/+esm`) at runtime, so it always
+demonstrates what is actually on npm.
+
+A push to `master` that touches `playground/` deploys it to GitHub Pages via
+`.github/workflows/pages.yml`. To work on it locally, serve the folder:
+
+```bash
+python3 -m http.server -d playground 8000
+```
+
+**When you release a new version, bump `VERSION` at the top of
+`playground/playground.js`** — it pins the jsDelivr URL and is shown in the
+page footer so bug reports say which version was tested.
 
 ## Differences from the Go library
 

@@ -1,0 +1,499 @@
+/*
+  The page treats monospace as its display face rather than as "the code bit",
+  because the whole subject is text transformation and column alignment. The
+  accent is a proof-reader's red: converting markup to Markdown is copy-editing.
+*/
+
+:root {
+  --paper: #edf1f5;
+  --panel: #e4eaf0;
+  --field: #f8fafc;
+  --ink: #14202c;
+  --ink-2: #526478;
+  --rule: #c4d0dc;
+  --rule-grid: #14202c0f;
+  --red: #c93d28;
+  --blue: #2a62a6;
+  --shadow: 0 1px 0 #ffffffb3 inset, 0 1px 2px #14202c14;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --pane-font-size: 13px;
+  --pane-line: 1.55;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --paper: #0f171f;
+  --panel: #16202b;
+  --field: #0b1219;
+  --ink: #dbe5ee;
+  --ink-2: #8296a9;
+  --rule: #253442;
+  --rule-grid: #dbe5ee0d;
+  --red: #ff6e55;
+  --blue: #6fa9ee;
+  --shadow: 0 1px 0 #ffffff0a inset, 0 1px 2px #0006;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0 clamp(12px, 2.5vw, 28px) 12px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* - - - - - - - - - - - - - Masthead - - - - - - - - - - - - - */
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 22px 2px 16px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.masthead__title h1 {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: clamp(19px, 2.6vw, 26px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+/* The library's own subject matter, used as the one ornament in the header. */
+.masthead__title h1::before {
+  content: "<>";
+  margin-right: 0.5ch;
+  color: var(--red);
+  font-weight: 500;
+}
+
+.masthead__title h1::after {
+  content: " → md";
+  color: var(--ink-2);
+  font-weight: 400;
+}
+
+.masthead__tagline {
+  margin: 6px 0 0;
+  max-width: 62ch;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.masthead__side {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+/* - - - - - - - - - - - - - Controls - - - - - - - - - - - - - */
+
+.btn {
+  padding: 6px 11px;
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.3;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.btn:focus-visible,
+.check input:focus-visible,
+select:focus-visible,
+input[type="text"]:focus-visible,
+#output:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.btn--ghost {
+  background: transparent;
+  box-shadow: none;
+}
+
+.btn--quiet {
+  padding: 4px 9px;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.btn--quiet:hover {
+  border-color: var(--rule);
+  color: var(--ink);
+}
+
+.btn--icon {
+  padding: 5px 9px;
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* - - - - - - - - - - - - - Desk layout - - - - - - - - - - - - - */
+
+.desk {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  gap: 20px;
+  padding-top: 16px;
+  align-items: start;
+}
+
+.rail {
+  position: sticky;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.rail__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rail__head h2 {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.group {
+  margin: 0;
+  padding: 12px 12px 13px;
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.group legend {
+  padding: 0 6px;
+  margin-left: -4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.group--off {
+  opacity: 0.42;
+}
+
+.group__note {
+  margin: -2px 0 2px;
+  color: var(--ink-2);
+  font-size: 11px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.field--stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+}
+
+select,
+input[type="text"] {
+  min-width: 0;
+  padding: 4px 6px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.field select {
+  max-width: 55%;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.check--inline {
+  color: var(--ink-2);
+}
+
+.check input {
+  accent-color: var(--blue);
+  margin: 0;
+}
+
+/* - - - - - - - - - - - - - Panes - - - - - - - - - - - - - */
+
+.panes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px 16px;
+  min-height: calc(100vh - 190px);
+}
+
+.samples {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.samples__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.samples__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 320px;
+}
+
+.pane__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 7px;
+}
+
+.pane__head h2 {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.pane__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pane__meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+.pane__foot {
+  display: flex;
+  gap: 14px;
+  padding-top: 7px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+/* The display-width readout is the number this library exists to get right. */
+.pane__foot-key {
+  color: var(--red);
+}
+
+.pane__foot--error {
+  color: var(--red);
+}
+
+#input,
+.out {
+  flex: 1;
+  min-height: 0;
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  background: var(--field);
+}
+
+#input {
+  padding: 12px 14px;
+  width: 100%;
+  resize: none;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: var(--pane-font-size);
+  line-height: var(--pane-line);
+  tab-size: 2;
+}
+
+#input:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: -1px;
+}
+
+.out {
+  position: relative;
+  overflow: auto;
+}
+
+/*
+  Signature: a monospace column grid behind the output. Because the table
+  renderer pads by display width rather than character count, a CJK or emoji
+  cell lands on the same column as an ascii one — and here you can see it.
+*/
+.out--ruled::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--rule-grid) 0 1px,
+    transparent 1px 4ch
+  );
+  background-position: 14px 0;
+  font-family: var(--mono);
+  font-size: var(--pane-font-size);
+  pointer-events: none;
+}
+
+#output {
+  position: relative;
+  margin: 0;
+  padding: 12px 14px;
+  min-height: 100%;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: var(--pane-font-size);
+  line-height: var(--pane-line);
+  white-space: pre;
+}
+
+.out__body--error {
+  color: var(--red);
+  white-space: pre-wrap;
+}
+
+/* - - - - - - - - - - - - - Footer and toast - - - - - - - - - - - - - */
+
+.colophon {
+  margin: 18px 2px 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: 12px;
+}
+
+.colophon a,
+.masthead a {
+  color: inherit;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translate(-50%, 12px);
+  padding: 8px 16px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--panel);
+  box-shadow: 0 6px 18px #14202c26;
+  font-family: var(--mono);
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+.toast--on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* - - - - - - - - - - - - - Responsive - - - - - - - - - - - - - */
+
+@media (max-width: 900px) {
+  .desk {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rail {
+    position: static;
+    max-height: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+  }
+
+  .rail__head {
+    grid-column: 1 / -1;
+  }
+
+  .panes {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .pane {
+    min-height: 280px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    transition: none;
+  }
+}
