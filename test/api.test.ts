@@ -124,6 +124,33 @@ describe("Converter", () => {
   });
 });
 
+describe("template contents", () => {
+  // parse5 keeps the children of a <template> in a separate `content`
+  // fragment, but Go's x/net/html leaves them as ordinary children. Walking
+  // only childNodes silently dropped everything inside a template.
+  it("converts the children of a template", () => {
+    expect(convert("<p>before</p><template><p>inside</p></template><p>after</p>")).toBe(
+      "before\n\ninside\n\nafter",
+    );
+  });
+
+  it("converts a template nested in an element", () => {
+    expect(convert("<div><template><em>i</em></template></div>")).toBe("*i*");
+    expect(convert("<table><template><tr><td>c</td></tr></template></table>")).toBe("c");
+  });
+
+  it("keeps template contents in the parsed tree", () => {
+    const doc = parse("<body><template><p>inside</p></template></body>");
+    expect(renderHTML(doc)).toContain("<p>inside</p>");
+  });
+
+  // A template before any body content is parsed into <head>, whose contents
+  // are dropped — Go does the same, so there is nothing to render here.
+  it("renders nothing for a template that lands in head", () => {
+    expect(convert("<template><p>inside</p></template>")).toBe("");
+  });
+});
+
 describe("renderHTML", () => {
   it("serializes a parsed tree back to html", () => {
     const doc = parse("<p>a &amp; b</p>");
