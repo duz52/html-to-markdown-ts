@@ -52,6 +52,63 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* - - - - - - - - - - - - - Served-from-disk notice - - - - - - - - - - - - - */
+
+.file-warning {
+  display: none;
+}
+
+.is-file-protocol .file-warning {
+  display: block;
+  max-width: 62ch;
+  margin: 12vh auto 0;
+  padding: 22px 24px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--red);
+  border-radius: 7px;
+  background: var(--panel);
+}
+
+.file-warning h2 {
+  margin: 0 0 10px;
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.file-warning p {
+  margin: 0 0 12px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+.file-warning pre,
+.file-warning code {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.file-warning pre {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 5px;
+  background: var(--field);
+  overflow-x: auto;
+}
+
+.file-warning a {
+  color: var(--blue);
+}
+
+/* The app itself cannot work in this mode, so do not show a dead shell. */
+.is-file-protocol .masthead,
+.is-file-protocol .desk,
+.is-file-protocol .colophon {
+  display: none;
+}
+
 /* - - - - - - - - - - - - - Masthead - - - - - - - - - - - - - */
 
 .masthead {

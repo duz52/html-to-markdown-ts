@@ -15,6 +15,33 @@
     />
   </head>
   <body>
+    <script>
+      // A classic inline script, so it still runs when the module below cannot
+      // be fetched. Opening this file directly gives the page a "null" origin,
+      // and browsers refuse to load ES modules from there.
+      if (location.protocol === "file:") {
+        document.documentElement.classList.add("is-file-protocol");
+      }
+    </script>
+
+    <div class="file-warning">
+      <h2>This page needs a web server</h2>
+      <p>
+        Browsers block ES modules opened straight from disk over
+        <code>file://</code>, so nothing here can load. Serve the folder instead —
+        from the repository root, run:
+      </p>
+      <pre>npm run playground</pre>
+      <p>
+        then open <a href="http://localhost:8000">http://localhost:8000</a>. The
+        hosted copy at
+        <a href="https://duz52.github.io/html-to-markdown-ts/"
+          >duz52.github.io/html-to-markdown-ts</a
+        >
+        works without any of this.
+      </p>
+    </div>
+
     <header class="masthead">
       <div class="masthead__title">
         <h1>html-to-markdown-ts</h1>

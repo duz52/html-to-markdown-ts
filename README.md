@@ -195,11 +195,15 @@ from jsDelivr (`html-to-markdown-ts@VERSION/+esm`) at runtime, so it always
 demonstrates what is actually on npm.
 
 A push to `master` that touches `playground/` deploys it to GitHub Pages via
-`.github/workflows/pages.yml`. To work on it locally, serve the folder:
+`.github/workflows/pages.yml`. To work on it locally:
 
 ```bash
-python3 -m http.server -d playground 8000
+npm run playground   # then open http://localhost:8000
 ```
+
+It has to be served over HTTP. Opening `playground/index.html` from disk gives
+the page a `null` origin, and browsers refuse to load ES modules from there —
+the page detects that and explains it rather than sitting blank.
 
 **When you release a new version, bump `VERSION` at the top of
 `playground/playground.js`** — it pins the jsDelivr URL and is shown in the
