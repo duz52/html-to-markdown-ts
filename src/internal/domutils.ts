@@ -281,6 +281,28 @@ function isFakeSpan(node: Node): boolean {
 }
 
 /** Renames "span" nodes to "div" if any block element is found as a child. */
+/**
+ * Collects the tag name of every element in the tree.
+ *
+ * The pre-render transforms each walk the whole document looking for a handful
+ * of tags, and most documents contain none of them. One pass to find out which
+ * tags are actually there pays for itself by letting the rest be skipped.
+ */
+export function collectTagNames(doc: Node): Set<string> {
+  const names = new Set<string>();
+  const stack: Node[] = [doc];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.type === NodeType.Element) {
+      names.add(node.data);
+    }
+    for (let child = node.firstChild; child !== null; child = child.nextSibling) {
+      stack.push(child);
+    }
+  }
+  return names;
+}
+
 export function renameFakeSpans(doc: Node): void {
   const finder = (node: Node): void => {
     if (isFakeSpan(node)) {

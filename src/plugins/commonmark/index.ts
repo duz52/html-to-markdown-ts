@@ -9,6 +9,7 @@ import {
   LIST_END_COMMENT_DATA,
   addListEndComments,
   addSpace,
+  collectTagNames,
   leafBlockAlternatives,
   mergeAdjacent,
   moveListItems,
@@ -157,23 +158,56 @@ class CommonmarkPlugin implements Plugin {
   private handlePreRender(doc: Node): void {
     renameFakeSpans(doc);
 
+    // Each transform below walks the entire document, so a page with no links
+    // still paid for three passes hunting for them. Collect the tag names once
+    // and skip the passes that cannot match.
+    //
+    // This stays accurate because nothing between here and leafBlockAlternatives
+    // introduces a tag name: the removals and merges only take nodes away, and
+    // swapTags exchanges names between two elements that are both already
+    // present. A tag that is removed leaves a stale entry, which only costs a
+    // pass that finds nothing.
+    const tags = collectTagNames(doc);
+    const hasAny = (...names: string[]): boolean => names.some((name) => tags.has(name));
+
+    const hasBoldOrItalic = hasAny("strong", "b", "em", "i");
+    const hasInlineCode = hasAny("code", "var", "samp", "kbd", "tt");
+    const hasLink = tags.has("a");
+
     // - - - Bold / Italic - - - //
-    removeRedundant(doc, nameIsBothBoldOrItalic);
-    mergeAdjacent(doc, nameIsBoldOrItalic);
+    if (hasBoldOrItalic) {
+      removeRedundant(doc, nameIsBothBoldOrItalic);
+      mergeAdjacent(doc, nameIsBoldOrItalic);
+    }
 
     // - - - Code - - - //
-    removeEmptyCode(doc);
-    swapTags(doc, nameIsInlineCode, nameIsPre);
-    mergeAdjacent(doc, nameIsInlineCode);
+    if (tags.has("code")) {
+      removeEmptyCode(doc);
+    }
+    if (hasInlineCode) {
+      if (tags.has("pre")) {
+        swapTags(doc, nameIsInlineCode, nameIsPre);
+      }
+      mergeAdjacent(doc, nameIsInlineCode);
+    }
 
-    addSpace(doc, nameIsBoldOrItalic, nameIsInlineCode);
+    if (hasBoldOrItalic && hasInlineCode) {
+      addSpace(doc, nameIsBoldOrItalic, nameIsInlineCode);
+    }
 
     // - - - Link - - - //
-    removeRedundant(doc, nameIsBothLink);
-    swapTags(doc, nameIsBoldOrItalic, nameIsLink);
+    if (hasLink) {
+      removeRedundant(doc, nameIsBothLink);
+      if (hasBoldOrItalic) {
+        swapTags(doc, nameIsBoldOrItalic, nameIsLink);
+      }
 
-    // - - - Heading - - - //
-    swapTags(doc, nameIsLink, nameIsHeading);
+      // - - - Heading - - - //
+      if (hasAny("h1", "h2", "h3", "h4", "h5", "h6")) {
+        swapTags(doc, nameIsLink, nameIsHeading);
+      }
+    }
+
     leafBlockAlternatives(doc);
 
     // - - - List - - - //
