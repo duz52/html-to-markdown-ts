@@ -1,0 +1,64 @@
+name: Publish to npm
+
+# Publishing is driven by GitHub Releases: tag a commit, write the release
+# notes, publish the release, and this uploads that exact tree to npm.
+#
+# Authentication is npm trusted publishing (OIDC), so there is no token stored
+# in this repository. It requires a one-time setup on npmjs.com — the package's
+# Settings -> Trusted publisher, pointing at this repo and at this file by name.
+# Renaming this file breaks publishing until that entry is updated to match.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # Lets the runner mint the OIDC token npm exchanges for publish rights. This
+  # is also what makes npm attach a provenance attestation to the release.
+  id-token: write
+
+# A half-finished publish is worse than a delayed one.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          # Trusted publishing needs npm 11.5.1 or newer to do the OIDC
+          # exchange at all. Node 24 bundles a newer one, so pinning the Node
+          # version is what satisfies that — no separate npm upgrade step, and
+          # nothing unpinned pulled in moments before publishing.
+          node-version: 24.x
+          registry-url: https://registry.npmjs.org
+          # A poisoned dependency cache would run attacker-controlled code in
+          # the job holding the OIDC token. Deps are small; restore them fresh.
+          package-manager-cache: false
+
+      # Not "npm install": the lockfile is committed, and ci installs exactly
+      # that tree and fails on a lockfile that disagrees with package.json,
+      # rather than resolving something new on its way out the door.
+      - run: npm ci
+
+      # npm has no opinion about whether the tag and the manifest agree, and a
+      # mismatch is only visible after the version is already public.
+      - name: Check the release tag matches package.json
+        if: github.event_name == 'release'
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$pkg" ]; then
+            echo "release tag ${GITHUB_REF_NAME} does not match package.json version ${pkg}" >&2
+            exit 1
+          fi
+
+      # The "prepublishOnly" script does a clean build and runs the test suite,
+      # so the tarball is built here rather than trusted from a previous job.
+      - run: npm publish
