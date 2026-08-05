@@ -1,0 +1,57 @@
+name: CI
+
+# Until now the test suite only ran at publish time, via prepublishOnly, so a
+# broken change was visible after the release was already cut. This runs it on
+# the branch instead.
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+# Superseded runs on a branch are not worth finishing.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test (node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      # One version failing is the interesting case, so let the rest report.
+      fail-fast: false
+      matrix:
+        # 18 is the floor "engines" promises; 22 and 24 are the supported LTS
+        # lines; 26 is current and becomes LTS in October, so breakage there
+        # shows up before it is the version everyone is on.
+        node-version: [18.x, 22.x, 24.x, 26.x]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - run: npm ci
+      - run: npm test
+
+  checks:
+    # tsc does not care which Node runs it, so these do not belong in the
+    # matrix — they would be the same work four times over.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.x
+          cache: npm
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
