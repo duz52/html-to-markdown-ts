@@ -281,6 +281,28 @@ function isFakeSpan(node: Node): boolean {
 }
 
 /** Renames "span" nodes to "div" if any block element is found as a child. */
+/**
+ * Collects the tag name of every element in the tree.
+ *
+ * The pre-render transforms each walk the whole document looking for a handful
+ * of tags, and most documents contain none of them. One pass to find out which
+ * tags are actually there pays for itself by letting the rest be skipped.
+ */
+export function collectTagNames(doc: Node): Set<string> {
+  const names = new Set<string>();
+  const stack: Node[] = [doc];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.type === NodeType.Element) {
+      names.add(node.data);
+    }
+    for (let child = node.firstChild; child !== null; child = child.nextSibling) {
+      stack.push(child);
+    }
+  }
+  return names;
+}
+
 export function renameFakeSpans(doc: Node): void {
   const finder = (node: Node): void => {
     if (isFakeSpan(node)) {
@@ -415,8 +437,15 @@ export function moveListItems(n: Node): void {
     }
   }
 
-  for (const child of allChildNodes(n)) {
+  // Only the loop above restructures the children of n, and it has already
+  // run, so the recursion can walk the list live. Recursing into a child only
+  // ever rearranges that child's own children, never its siblings — but the
+  // next pointer is taken first anyway, which costs nothing and would survive
+  // the node being moved.
+  for (let child = n.firstChild; child !== null; ) {
+    const next = child.nextSibling;
     moveListItems(child);
+    child = next;
   }
 }
 
