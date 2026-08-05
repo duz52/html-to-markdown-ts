@@ -4,7 +4,10 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "outDir": "dist/esm",
-    "rootDir": "src"
+    "rootDir": "src",
+    // The published package does not carry src, so a source map would only
+    // point at a file that is not there. Maps stay on for local builds.
+    "sourceMap": false
   },
   "include": ["src"]
 }
