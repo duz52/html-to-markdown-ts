@@ -4,7 +4,7 @@
 //
 // Bump VERSION when you release. It is shown in the footer so that anyone
 // filing a bug report knows which version they were looking at.
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 const MODULE_URL = `https://cdn.jsdelivr.net/npm/html-to-markdown-ts@${VERSION}/+esm`;
 
 const $ = (id) => document.getElementById(id);

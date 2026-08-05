@@ -1,6 +1,6 @@
 {
   "name": "html-to-markdown-ts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Convert HTML to Markdown. A TypeScript port of the Go library github.com/JohannesKaufmann/html-to-markdown, using parse5 for parsing.",
   "keywords": [
     "html",
